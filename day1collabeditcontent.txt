@@ -1,0 +1,382 @@
+https://www.python.org/ftp/python/3.12.3/python-3.12.3-amd64.exe
+
+>>> rdd1=sc.textFile("c:/test/first.txt");
+>>> rdd1.collect()
+
+>>> arr=[3,6,1,12,9,10]
+>>> rdd2=sc.parallelize(arr)
+>>> rdd2.collect()
+
+
+<dependencies>
+  <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-core -->
+<dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-core_2.12</artifactId>
+    <version>3.1.3</version>
+</dependency>
+  
+  </dependencies>
+  
+  package com.jpmc.training.sparkcore;
+
+import java.util.List;
+
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+
+public class RDDCreationTest1 {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        SparkConf conf=new SparkConf();
+        conf.setMaster("local[*]");
+        conf.setAppName("rdd-creation-test");
+        JavaSparkContext sc=new JavaSparkContext(conf);
+        JavaRDD<String> testRdd=sc.textFile("c:/test");
+        List<String> list=testRdd.collect();
+        list.forEach(System.out::println);
+
+    }
+
+}
+
+
+package com.jpmc.training.sparkcore;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+
+public class RDDCreationTest1 {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        SparkConf conf=new SparkConf();
+        conf.setMaster("local[*]");
+        conf.setAppName("rdd-creation-test");
+        JavaSparkContext sc=new JavaSparkContext(conf);
+        /*JavaRDD<String> testRdd=sc.textFile("c:/test");
+        List<String> list=testRdd.collect();
+        list.forEach(System.out::println);*/
+        JavaRDD<Integer> intRdd=sc.parallelize(Arrays.asList(23,22,11,4));
+        intRdd.collect().forEach(System.out::println);
+
+    }
+
+}
+
+
+https://www.python.org/ftp/python/3.10.0/python-3.10.0-amd64.exe
+
+PYSPARK_PYTHON ---- C:\Python310\python.exe
+
+>>> arr=[3,6,1,12,9,10]
+>>> rdd1=sc.parallelize(arr)
+>>> rdd1.count()
+
+>>> rdd2=rdd1.map(lambda n:n*2)
+>>> rdd2.collect()
+
+>>> rdd1.collect()
+
+>>> rdd3=rdd1.filter(lambda n:n>5)
+>>> rdd3.collect()
+
+>>> rdd2=rdd1.filter(lambda n:n>5).map(lambda n:n*n)
+>>> rdd2.collect()
+
+package com.jpmc.training.sparkcore;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+
+public class RDDTransformationTest1 {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        SparkConf conf=new SparkConf();
+        conf.setMaster("local[*]");
+        conf.setAppName("rdd-transformation-test");
+        JavaSparkContext sc=new JavaSparkContext(conf);
+        JavaRDD<String> testRdd=sc.textFile("c:/test");
+        JavaRDD<String> transformedRdd=testRdd.filter(line->line.length()>10).map(line->line.toUpperCase());
+        transformedRdd.collect().forEach(System.out::println);
+        
+
+    }
+
+}
+
+
+>>> rdd3=sc.textFile("c:/test")
+>>> rdd4=rdd3.map(lambda line:line.split(" "))
+>>> rdd4.collect()
+
+>>> rdd5=rdd3.flatMap(lambda line:line.split(" "))
+>>> rdd5.collect()
+>>> rdd5.take(3)
+
+>>> rdd5.saveAsTextFile("c:/test-out1")
+
+ rdd5.getNumPartitions()
+ 
+ >>> rdd6=rdd5.repartition(1)
+>>> rdd6.getNumPartitions()
+1
+>>> rdd6.saveAsTextFile("c:/test-out2")
+
+>>> t=("apple","orange","mango")
+>>> print(t)
+
+>>> print(t[0])
+
+>>> print(len(t))
+
+
+>>> rdd1=sc.parallelize([6,9,3,7])
+>>> sum=rdd1.reduce(lambda x,y:x+y)
+>>> print(sum)
+
+
+>>> rdd2=sc.textFile("c:/test/first.txt")
+>>> rdd3=rdd2.map(lambda s:s.upper())
+>>> concatenatedStr=rdd3.reduce(lambda s1,s2: s1+s2)
+>>> print(concatenatedStr)
+
+
+>>> pairRdd1=sc.parallelize([("a",1),("b",5),("c",6),("a",4),("b",3)])
+>>> pairRdd2=pairRdd1.reduceByKey(lambda x,y:x+y)
+>>> pairRdd2.collect()
+
+
+>>> pairRdd2=pairRdd1.reduceByKey(lambda x,y:x+y)
+>>> pairRdd3=pairRdd2.sortByKey()
+pairRdd3.collect()
+
+
+>>> pairRdd3=pairRdd2.sortByKey(False)
+pairRdd3.collect()
+
+>>> pairRdd3=pairRdd2.sortBy(lambda t:t[1])
+
+
+
+pairRdd3.collect()
+
+>>> pairRdd3=pairRdd2.sortBy(lambda t:t[1],False)
+
+
+
+pairRdd3.collect()
+
+
+package com.jpmc.training.sparkcore;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+
+import scala.Tuple2;
+
+public class PairRddTest {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        SparkConf conf=new SparkConf();
+        conf.setMaster("local[*]");
+        conf.setAppName("pair-rdd-transformation-test");
+        JavaSparkContext sc=new JavaSparkContext(conf);
+        List<Tuple2<String, Integer>> list=new ArrayList<>();
+        list.add(new Tuple2<>("a",4));
+        list.add(new Tuple2<>("c",2));
+        list.add(new Tuple2<>("b",3));
+        list.add(new Tuple2<>("a",6));
+        list.add(new Tuple2<>("c",7));
+        JavaPairRDD<String, Integer> testRdd=sc.parallelize(list).
+                mapToPair(t->new Tuple2<String,Integer>(t._1,t._2));
+        testRdd.reduceByKey((x,y)->x+y).sortByKey().collect().forEach(System.out::println);
+        
+
+    }
+
+}
+
+
+c:\test\words.txt
+
+the cat sat on the mat
+the aardvark sat on the sofa
+
+>>> linesRdd=sc.textFile("c:/test/words.txt")
+>>> wordsRdd=linesRdd.flatMap(lambda line:line.split(" "))
+>>> wordOccurrenceRdd=wordsRdd.map(lambda word:(word,1))
+>>> wordCountRdd=wordOccurrenceRdd.reduceByKey(lambda x,y:x+y)
+>>> wordCountRdd.collect()
+
+package com.jpmc.training.sparkcore;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+
+import scala.Tuple2;
+
+public class WordCountTest {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        SparkConf conf=new SparkConf();
+        conf.setMaster("local[*]");
+        conf.setAppName("word-count-test");
+        JavaSparkContext sc=new JavaSparkContext(conf);
+        JavaRDD<String> linesRdd=sc.textFile("c:/test/words.txt");
+        linesRdd.flatMap(line->Arrays.asList(line.split(" ")).iterator())
+        .mapToPair(word->new Tuple2<>(word, 1)).reduceByKey((x,y)->x+y).collect()
+        .forEach(System.out::println);
+        
+
+    }
+
+}
+
+
+package com.jpmc.training.sparkcore;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+
+import scala.Tuple2;
+
+public class WordCountTest {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        SparkConf conf=new SparkConf();
+        conf.setMaster("local[*]");
+        conf.setAppName("word-count-test");
+        JavaSparkContext sc=new JavaSparkContext(conf);
+        sc.setLogLevel("WARN");
+        JavaRDD<String> linesRdd=sc.textFile("c:/test/words.txt");
+        linesRdd.flatMap(line->Arrays.asList(line.split(" ")).iterator())
+        .mapToPair(word->new Tuple2<>(word, 1)).reduceByKey((x,y)->x+y).collect()
+        .forEach(System.out::println);
+        
+
+    }
+
+}
+
+
+jar tvf c:\jarfiles\Test.jar
+
+
+spark-submit --class com.jpmc.training.sparkcore.WordCountTest c:\jarfiles\Test.jar
+
+rdd1=sc.textFile("c:/test")
+
+ rdd2=rdd1.map(lambda line:line.upper())
+ 
+ rdd2.getNumPartitions()
+ 
+ 
+
+
+
+
+
+linesRdd=sc.textFile("c:/test/words.txt")
+wordsRdd=linesRdd.flatMap(lambda line:line.split(" "))
+wordOccurrenceRdd=wordsRdd.map(lambda word:(word,1))
+ 
+ 
+ 
+ val linesRdd=sc.textFile("c:/test/words.txt")
+ val wordsRdd=linesRdd.flatMap(line=>line.split(" "))
+ val wordOccurrenceRdd=wordsRdd.map(word=>(word,1))
+ 
+  wordOccurrenceRdd.toDebugString
+  
+  val wordCountRdd=wordOccurrenceRdd.reduceByKey((x,y)=>x+y)
+  
+  wordCountRdd.toDebugString
+  
+  val partitionedRdd=wordCountRdd.repartition(5)
+  
+  partitionedRdd.toDebugString
+  
+   partitionedRdd.collect()
+   
+   
+   package com.jpmc.training.sparkcore;
+
+import java.util.Arrays;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+
+import scala.Tuple2;
+
+public class WordCountTestInCluster {
+
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        SparkConf conf=new SparkConf();
+        //conf.setMaster("local[*]");
+        conf.setAppName("word-count-test");
+        JavaSparkContext sc=new JavaSparkContext(conf);
+        sc.setLogLevel("WARN");
+        JavaRDD<String> linesRdd=sc.textFile("c:/test/words.txt");
+        linesRdd.flatMap(line->Arrays.asList(line.split(" ")).iterator())
+        .mapToPair(word->new Tuple2<>(word, 1)).reduceByKey((x,y)->x+y).
+        repartition(5).collect()
+        .forEach(System.out::println);
+        
+        linesRdd.map(line->line.toUpperCase()).
+        repartition(10)
+        .collect().forEach(System.out::println);
+        
+        try {
+            Thread.sleep(10*60*1000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+}
+
+  
+  jar tvf c:\jarfiles\Second.jar
+  
+  
+
+
+
+https://drive.google.com/drive/folders/1eZp9pvf4DYk5nTO9OfP3p-dUHmMBipxw?usp=sharing
+

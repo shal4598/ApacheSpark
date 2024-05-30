@@ -1,0 +1,189 @@
+RDD is the fundamental unit of data in spark.
+R------Resilient------------If the data is lost, it can be recreated
+D------Distributed----------Distributed across multiple nodes in the cluster
+D------Dataset--------------Collection
+
+RDD------Collection of data partitioned across multiple nodes where a logic
+can be parallelly applied.
+
+Functional programming:
+
+Functions are used as building blocks of an application.
+Functions are used as expressions, values, parameter to functions and  return value from functions.
+
+
+Functional programming supports
+1. passing a function as an argument to another function
+2. return a function from another function
+3. anonymous functions (functions without name)
+
+
+Setup and verify spark:
+
+1. Download the jdk 1.8 from https://www.oracle.com/in/java/technologies/javase/javase-jdk8-downloads.html#license-lightbox
+and install it.
+2. set the JAVA_HOME environment variable
+3. Download Apache Spark from https://www.apache.org/dyn/closer.lua/spark/spark-3.0.3/spark-3.0.3-bin-hadoop2.7.tgz
+ and extract to c:\
+
+4. Set the SPARK_HOME environment variable.
+
+
+
+4. Spark internally uses some unix shell scripts from hadoop for interacting with the file system.
+Since we are using windows , we need to download these scripts separately.
+These downloaded shell scripts are part of hadoop software and the directory which contain these scripts should be set as 	HADOOP_HOME.
+These scripts are collectively called Winutils for Hadoop.
+
+Download winutils for hadoop from https://github.com/cdarlint/winutils.git and extract to c:\.
+
+6. set the HADOOP_HOME environment variable.
+
+7. Add %JAVA_HOME%\bin,%HADOOP_HOME%\bin and %SPARK_HOME%\bin to the path.
+
+8. Open a new command window and run spark-shell.
+
+
+collect() returns the collection format of the rdd.
+
+collection denotes a native  collection in languages like scala,python and java.
+
+rdd denotes collection across multiple nodes.
+rdd is a spark abstraction.
+
+
+Spark Context represents the connection to the spark cluster.
+Using spark context, we can access other parts of the spark api.
+
+master---- specifies the master url for a distributed cluster or local to run locally.
+
+local[1]-------to run locally with 1 thread
+local[n]-------to run locally with n threads
+local[*]-------to run locally with as many threads as the number logical cores in the machine.
+
+
+transformation functions commonly used with rdds
+map()
+filter()
+flatMap()
+
+map(function:x1=>x2)------applies the parameter function to each element of the rdd and returns another 
+rdd with transformed values.
+
+filter(function:x=>Boolean)----applies the parameter function to each element of the rdd and returns 
+another rdd for with elements for which the condition is true.
+
+flatMap()-----flatMap is same as map except that it flattens at last.
+flatten--------reduces two dimensional to one dimensional.
+
+Partitioning divides rdd data into smaller,manageable chunks called partitions.
+It is a logical division of data stored in a  single node in the cluster.
+A partition can't spread across multiple nodes.
+RDD is a collection of partitions.
+
+A tuple is a collection which is ordered and immutable.
+
+rdd.reduce(function :(a,b)=>c)
+
+
+rdd=>6,9,2,5,8,10
+
+rdd.reduce(lambda x,y:x+y)
+
+6,9=>15
+15,2=>17
+17,5=>22
+22,8=>30
+30,10=>40
+
+class JavaRDD<T>{
+	T reduce(BiFunction<T,T> f)
+}
+
+interface BiFunction<T,T>{
+	T compute(T t1,T t2);
+}
+
+
+Map Reduce is a popular programming model used in the big data world.
+
+Contains 2 phases.
+
+1. Map Phase-----Contains sequence of transformations
+2. Reduce Phase--works on the output of map phase and perform aggregations.
+
+WordCount is a popular example which can be solved with Map Reduce Programming model.
+
+spark-submit:
+
+It is a common line tool used to run the spark applications outside the ide.
+
+syntax:
+
+for java and scala:
+
+spark-submit [--master url] --class className jar-file.
+
+for python
+
+spark-submit [--master url] py-file.
+
+
+Worker:
+
+A worker provides CPU,memory and storage resources to a spark application.
+The workers run a spark application as distributed processes on a set of cluster nodes.
+
+Cluster Manager:
+
+Spark uses a cluster manager to acquire resources for executing a job in the cluster.
+It manages the computing resources across a cluster of nodes.
+The cluster manager is also called the master process.
+
+Driver Program:
+The driver program provides the data processing logic that spark executes on the worker nodes.
+A scala/python/java application which contains the spark code is an example of a driver program.
+The spark shlell and pyspark-shell are also examples of driver program.
+
+Executor:
+An executor is a jvm that spark creates on each worker node for an application.
+An executor has the same life span as the application for which it is created.
+As soon as the application is completed, the respective executors(jvms) are terminated in the worker nodes.
+
+
+
+Job:
+
+A job is a set of computations that spark performs to return results to the driver program.
+Each job contains one action and one or more transformations.
+
+Task is the smallest unit of work that spark sends to an executor.
+Spark creates a task per partition.
+Task represents a job's logic for each partition.
+
+
+Shuffle:
+
+A shuffle redistributes data among the cluster of nodes.
+It is an expensive operation because it involves moving data across the network.
+A shuffle may happen due to any of the following scenarios.
+1. where there is repartitioning.
+2. when there is an aggregate operation based on a key-----spark guarantees that all the data with the 
+same key move to the same partition during an aggregate operation.
+
+
+Stage:
+
+Stage is a collection of tasks. Spark splits a job into DAG(Directed Acyclic Graph) of stages.
+A stage may depend on another stage.
+When there is a shuffle, spark starts another stage because the data in the partitions have  changed
+and separate set of tasks have to relaunched.
+
+
+
+
+
+
+
+
+
